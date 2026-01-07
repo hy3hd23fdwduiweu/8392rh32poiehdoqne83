@@ -5,45 +5,53 @@ db.serialize(() => {
 
   db.run(`
     CREATE TABLE IF NOT EXISTS players (
-      uuid TEXT PRIMARY KEY,
+      uuid TEXT,
+      server TEXT,
       name TEXT,
       token TEXT UNIQUE,
       x REAL,
       y REAL,
       z REAL,
       dimension TEXT,
-      stealth_until INTEGER DEFAULT 0
+      last_move INTEGER DEFAULT 0,
+      stealth_until INTEGER DEFAULT 0,
+      PRIMARY KEY (uuid, server)
     )
   `);
 
   db.run(`
     CREATE TABLE IF NOT EXISTS friends (
+      server TEXT,
       sender TEXT,
       receiver TEXT,
       accepted INTEGER,
-      PRIMARY KEY (sender, receiver)
+      PRIMARY KEY (server, sender, receiver)
     )
   `);
 
   db.run(`
     CREATE TABLE IF NOT EXISTS shares (
+      server TEXT,
       owner TEXT,
       target TEXT,
-      expires INTEGER
+      expires INTEGER,
+      PRIMARY KEY (server, owner, target)
     )
   `);
 
   db.run(`
     CREATE TABLE IF NOT EXISTS ignored (
+      server TEXT,
       owner TEXT,
       target TEXT,
-      PRIMARY KEY (owner, target)
+      PRIMARY KEY (server, owner, target)
     )
   `);
 
   db.run(`
     CREATE TABLE IF NOT EXISTS groups (
       id TEXT PRIMARY KEY,
+      server TEXT,
       name TEXT,
       leader TEXT,
       password TEXT,
@@ -55,7 +63,7 @@ db.serialize(() => {
     CREATE TABLE IF NOT EXISTS group_members (
       group_id TEXT,
       uuid TEXT,
-      role TEXT,          -- leader | co | member
+      role TEXT,
       blinded INTEGER,
       icon INTEGER,
       PRIMARY KEY (group_id, uuid)
@@ -65,7 +73,8 @@ db.serialize(() => {
   db.run(`
     CREATE TABLE IF NOT EXISTS group_invites (
       group_id TEXT,
-      target TEXT
+      target TEXT,
+      PRIMARY KEY (group_id, target)
     )
   `);
 
@@ -81,6 +90,7 @@ db.serialize(() => {
 
   db.run(`
     CREATE TABLE IF NOT EXISTS broadcasts (
+      server TEXT,
       sender TEXT,
       message TEXT,
       scope TEXT,
