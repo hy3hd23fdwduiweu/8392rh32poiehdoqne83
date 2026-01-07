@@ -13,6 +13,10 @@ import visibility from "./routes/visibility.js";
 const app = express();
 app.use(express.json());
 
+app.get("/", (_, res) => {
+  res.send("TeamTracker API is running");
+});
+
 app.use("/register", register);
 app.use("/location", auth, location);
 app.use("/friends", auth, friends);
