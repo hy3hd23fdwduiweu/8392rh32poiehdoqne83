@@ -21,4 +21,7 @@ app.use("/groups", auth, groups);
 app.use("/stealth", auth, stealth);
 app.use("/visible", auth, visibility);
 
-app.listen(3000, () => console.log("TeamTracker API running"));
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () =>
+  console.log(`TeamTracker API running on port ${PORT}`)
+);
